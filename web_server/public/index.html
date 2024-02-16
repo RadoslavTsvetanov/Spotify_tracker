@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning the Auth Flow</title>
+</head>
+
+<body>
+    <div id="login">
+        <h1>Learning Authorization Flow Spotify</h1>
+        <a href="/login">Log in with Spotify</a>
+    </div>
+    <div id="logged-in">
+        <h1>Logged in with Authorization Flow!</h1>
+        <input type="text" id="nameInput" placeholder="Enter your name">
+        <button id="refresh-token">Get a New Token!</button>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script>
+
+        function getHashParams() {
+            let hashParams = {};
+            let e, r = /([^&;=]+)=?([^&;]*)/g, // really weird looking way to include all characters
+                q = window.location.hash.substring(1);
+            while (e = r.exec(q)) {
+                hashParams[e[1]] = decodeURIComponent(e[2]);
+            }
+            return hashParams;
+        }
+
+        let params = getHashParams();
+
+        let access_token = params.access_token;
+        let refresh_token = params.refresh_token;
+        let error = params.error;
+
+        if (error) {
+            alert('There was an error during the authentication');
+        } else {
+            if (access_token) {
+                $('#login').hide(); // change to login screen by hiding matching divs
+                $('#logged-in').show(); // but only if the login was successful
+            } else {
+                $('#login').show();
+                $('#logged-in').hide();
+            };
+        };
+function submit_token() {
+            let name = document.getElementById('nameInput').value;
+            $.ajax({
+                url: '/refresh_token', 
+                data: {
+                    'refresh_token': refresh_token,
+                    'name' : name
+                }
+            }).done(function (data) {
+                access_token = data.access_token;
+                console.log(`new access token: ${access_token}`);
+            });
+        }
+        document.getElementById('refresh-token').addEventListener('click',() => {
+            submit_token()
+        } , false);
+        submit_token()
+    </script>
+</body>
+
+</html>
