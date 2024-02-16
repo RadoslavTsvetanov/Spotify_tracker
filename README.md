@@ -1,6 +1,7 @@
+spotify app desogned to keep your listening minutes up
+The credentials neeed to be changed
 
-official example: https://github.com/spotify/web-api-auth-examples
+*HOW IT WORKS*
 
-use the commands ```npm install``` then ```node app.js``` to run
 
-( you'll need to use your own spotify app credentials )
+i have made two docker images fior easy of use which you need to run and then you go to localhost:8888 you enter your credintials and it will automatically play songs
